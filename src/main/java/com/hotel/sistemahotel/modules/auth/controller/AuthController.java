@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     private final AuthService authService;
-    private final PasswordEncoder passwordEncoder;
+    //private final PasswordEncoder passwordEncoder;
 
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<LoginResponseDto>> login(
@@ -25,9 +25,9 @@ public class AuthController {
     }
 
     //enpoint temporal para desarrollo quital al final
-    @GetMapping("/hash")
+    /*@GetMapping("/hash")
     public ResponseEntity<String> generarHash(@RequestParam String password) {
         return ResponseEntity.ok(passwordEncoder.encode(password));
-    }
+    }*/
 
 }
