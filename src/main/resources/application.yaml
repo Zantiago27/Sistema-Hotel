@@ -3,10 +3,14 @@ server:
 
 spring:
   datasource:
-    url: jdbc:postgresql://aws-1-us-east-1.pooler.supabase.com:6543/postgres
+    url: jdbc:postgresql://aws-1-us-east-1.pooler.supabase.com:6543/postgres?prepareThreshold=0
     username: postgres.paokukgvnotqbzdpdixy
     password: B4h0tel*#0000
     driver-class-name: org.postgresql.Driver
+    #Configuración de Hikari para evitar que el pool guarde estados
+    hikari:
+      data-source-properties:
+      prepareThreshold: 0
 
   jpa:
     hibernate:
@@ -16,6 +20,8 @@ spring:
       hibernate:
         format_sql: true
         dialect: org.hibernate.dialect.PostgreSQLDialect
+        # Forzamos a Hibernate a no confiar en sentencias preparadas del lado del servidor
+        prepare_all_queries: false
 
 jwt:
   secret: "TU_SECRET_AQUI_MINIMO_64_CARACTERES"
@@ -24,4 +30,6 @@ jwt:
 logging:
   level:
     org.hibernate.SQL: DEBUG
-    com.tuempresa.hotel: DEBUG
+    #com.tuempresa.hotel: DEBUG
+    # Ajusta esto al paquete real de tu proyecto para ver tus logs (nuevo)
+    com.hotel.sistemahotel: DEBUG

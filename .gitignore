@@ -48,3 +48,6 @@ logs/
 # Archivos del sistema operativo
 .DS_Store        # Mac
 Thumbs.db        # Windows
+
+
+/node_modules
