@@ -79,6 +79,7 @@ public class HabitacionService {
         return toDto(habitacionRepository.save(habitacion), tipo.getNombre());
     }
 
+    //listamos habitaciones
     public List<HabitacionResponseDto> listar() {
         UUID sucursalId = TenantContext.getSucursalId();
         return habitacionRepository.findAllBySucursalIdAndIsActiveTrue(sucursalId)

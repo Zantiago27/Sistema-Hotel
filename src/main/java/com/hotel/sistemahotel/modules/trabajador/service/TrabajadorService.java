@@ -23,8 +23,10 @@ public class TrabajadorService {
     private final PasswordEncoder passwordEncoder;
     private final ModelMapper modelMapper;
 
+    //creamos un trabajador
     public UsuarioResponseDto crear(CrearUsuarioDto dto) {
         UUID empresaId = TenantContext.getEmpresaId();
+        UUID sucursalId = TenantContext.getSucursalId();
 
         if (usuarioRepository.existsByEmailAndEmpresaId(dto.getEmail(), empresaId)) {
             throw BusinessException.badRequest("Ya existe un usuario con ese email en esta empresa");
@@ -32,7 +34,8 @@ public class TrabajadorService {
 
         Usuario usuario = Usuario.builder()
                 .empresaId(empresaId)
-                .sucursalId(dto.getSucursalId())
+                //.sucursalId(dto.getSucursalId())
+                .sucursalId(sucursalId)
                 .nombre(dto.getNombre())
                 .apellido(dto.getApellido())
                 .email(dto.getEmail())
