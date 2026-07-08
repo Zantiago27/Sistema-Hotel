@@ -21,8 +21,8 @@ public class ProductoController {
     private final ProductoService productoService;
 
     @PostMapping
-    @PreAuthorize("hasAnyRole('ADMIN_EMPRESA', 'GERENTE')")
-    public ResponseEntity<ApiResponse<ProductoResponseDto>> crear(
+    @PreAuthorize("hasAnyRole('ADMIN_EMPRESA', 'GERENTE', 'RECEPCIONISTA')") //PERMISOS
+    public ResponseEntity<ApiResponse<ProductoResponseDto>> crear( //METODO CREAR
             @Valid @RequestBody ProductoRequestDto dto) {
         return ResponseEntity.ok(ApiResponse.ok(productoService.crear(dto)));
     }
@@ -42,16 +42,16 @@ public class ProductoController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN_EMPRESA', 'GERENTE')")
-    public ResponseEntity<ApiResponse<ProductoResponseDto>> actualizar(
+    @PreAuthorize("hasAnyRole('ADMIN_EMPRESA', 'GERENTE', 'RECEPCIONISTA')")
+    public ResponseEntity<ApiResponse<ProductoResponseDto>> actualizar( //ACTUALIZAR
             @PathVariable UUID id,
             @Valid @RequestBody ProductoRequestDto dto) {
         return ResponseEntity.ok(ApiResponse.ok(productoService.actualizar(id, dto)));
     }
 
     @PatchMapping("/{id}/stock")
-    @PreAuthorize("hasAnyRole('ADMIN_EMPRESA', 'GERENTE')")
-    public ResponseEntity<ApiResponse<ProductoResponseDto>> ajustarStock(
+    @PreAuthorize("hasAnyRole('ADMIN_EMPRESA', 'GERENTE', 'RECEPCIONISTA')")
+    public ResponseEntity<ApiResponse<ProductoResponseDto>> ajustarStock( //AJUSTAR STOCK
             @PathVariable UUID id,
             @RequestParam int cantidad) {
         return ResponseEntity.ok(ApiResponse.ok(productoService.ajustarStock(id, cantidad)));

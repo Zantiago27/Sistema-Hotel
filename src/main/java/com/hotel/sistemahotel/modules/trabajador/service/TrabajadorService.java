@@ -25,16 +25,19 @@ public class TrabajadorService {
 
     //creamos un trabajador
     public UsuarioResponseDto crear(CrearUsuarioDto dto) {
-        UUID empresaId = TenantContext.getEmpresaId();
-        UUID sucursalId = TenantContext.getSucursalId();
+        UUID empresaId  = TenantContext.getEmpresaId();
 
         if (usuarioRepository.existsByEmailAndEmpresaId(dto.getEmail(), empresaId)) {
             throw BusinessException.badRequest("Ya existe un usuario con ese email en esta empresa");
         }
 
+        // Si el DTO trae sucursalId la usamos, si no, heredamos la del creador
+        UUID sucursalId = dto.getSucursalId() != null
+                ? dto.getSucursalId()
+                : TenantContext.getSucursalId();
+
         Usuario usuario = Usuario.builder()
                 .empresaId(empresaId)
-                //.sucursalId(dto.getSucursalId())
                 .sucursalId(sucursalId)
                 .nombre(dto.getNombre())
                 .apellido(dto.getApellido())
@@ -65,7 +68,11 @@ public class TrabajadorService {
         usuario.setNombre(dto.getNombre());
         usuario.setApellido(dto.getApellido());
         usuario.setRol(dto.getRol());
-        usuario.setSucursalId(dto.getSucursalId());
+
+        // Solo cambia sucursal si el DTO la trae explícitamente
+        if (dto.getSucursalId() != null) {
+            usuario.setSucursalId(dto.getSucursalId());
+        }
 
         if (dto.getPassword() != null && !dto.getPassword().isBlank()) {
             usuario.setPasswordHash(passwordEncoder.encode(dto.getPassword()));
