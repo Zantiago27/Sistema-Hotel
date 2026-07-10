@@ -1,7 +1,11 @@
+#PARA DESARROLLO
 server:
   port: ${PORT:8080}
 
 spring:
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+
   datasource:
     url: ${DATABASE_URL}
     username: ${DB_USERNAME}
@@ -11,9 +15,7 @@ spring:
     hikari:
       data-source-properties:
       prepareThreshold: 0
-    spring:
-      profiles:
-        active: ${SPRING_PROFILES_ACTIVE:dev}
+
 
   jpa:
     hibernate:
@@ -27,7 +29,7 @@ spring:
         prepare_all_queries: false
 
 jwt:
-  secret: ${JWT_SECRET}
+  secret: ${JWT_SECRET:}
   expiration-ms: ${JWT_EXPIRATION_MS:84000000}
 
 logging:
