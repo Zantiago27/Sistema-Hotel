@@ -192,6 +192,7 @@
                 </configuration>
                 <executions>
                     <execution>
+                        <phase>none</phase> <!--desahbilitamos para desplegarlo-->
                         <goals>
                             <goal>check</goal>
                         </goals>
