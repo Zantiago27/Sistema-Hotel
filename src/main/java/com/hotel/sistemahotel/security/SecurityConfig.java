@@ -21,6 +21,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.http.HttpMethod;
 
 import java.util.List;
 
@@ -43,6 +44,7 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // ← AGREGADO
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()  // ← AGREGAR ESTA LÍNEA
                         .requestMatchers("/api/v1/auth/**").permitAll()
                         .requestMatchers("/api/v1/trabajadores/**").hasAnyRole("GERENTE", "ADMIN_EMPRESA")
                         .requestMatchers("/api/v1/reportes/**").hasAnyRole("GERENTE", "ADMIN_EMPRESA")
