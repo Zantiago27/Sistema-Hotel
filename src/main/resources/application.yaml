@@ -32,6 +32,12 @@ jwt:
   secret: ${JWT_SECRET:}
   expiration-ms: ${JWT_EXPIRATION_MS:84000000}
 
+# API externa von variable de entorno
+apis:
+  netpe:
+    token: ${APIS_NETPE_TOKEN:}
+    base-url: ${APIS_NETPE_BASE_URL:https://api.decolecta.com}
+
 logging:
   level:
     org.hibernate.SQL: DEBUG

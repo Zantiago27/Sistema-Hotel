@@ -69,6 +69,7 @@ public class HabitacionService {
                 .tipoId(tipo.getId())
                 .numero(dto.getNumero())
                 .piso(dto.getPiso())
+                .descripcion(dto.getDescripcion())
                 .estado("DISPONIBLE")
                 .precioHora(dto.getPrecioHora())
                 .precioDia(dto.getPrecioDia())
@@ -125,6 +126,7 @@ public class HabitacionService {
 
         habitacion.setTipoId(tipo.getId());
         habitacion.setPiso(dto.getPiso());
+        habitacion.setDescripcion(dto.getDescripcion());
         habitacion.setPrecioHora(dto.getPrecioHora());
         habitacion.setPrecioDia(dto.getPrecioDia());
         habitacion.setPrecioNoche(dto.getPrecioNoche());
@@ -155,18 +157,25 @@ public class HabitacionService {
     }
 
     private HabitacionResponseDto toDto(Habitacion h, String tipoNombre) {
+        // Obtener capacidad del tipo
+        Integer capacidadMax = tipoHabitacionRepository.findById(h.getTipoId())
+                .map(TipoHabitacion::getCapacidadMax)
+                .orElse(2);
+
         return HabitacionResponseDto.builder()
                 .id(h.getId())
                 .sucursalId(h.getSucursalId())
                 .tipoId(h.getTipoId())
                 .tipoNombre(tipoNombre)
                 .numero(h.getNumero())
+                .descripcion(h.getDescripcion())
                 .piso(h.getPiso())
                 .estado(h.getEstado())
                 .precioHora(h.getPrecioHora())
                 .precioDia(h.getPrecioDia())
                 .precioNoche(h.getPrecioNoche())
                 .isActive(h.getIsActive())
+                .capacidadMax(capacidadMax)
                 .build();
     }
 
@@ -177,5 +186,39 @@ public class HabitacionService {
                 .descripcion(t.getDescripcion())
                 .capacidadMax(t.getCapacidadMax())
                 .build();
+    }
+    //para tipo de habitacion
+
+    public TipoHabitacionDto actualizarTipo(UUID id, TipoHabitacionDto dto) {
+        UUID sucursalId = TenantContext.getSucursalId();
+        TipoHabitacion tipo = tipoHabitacionRepository
+                .findByIdAndSucursalId(id, sucursalId)
+                .orElseThrow(() -> BusinessException.notFound("Tipo no encontrado"));
+
+        tipo.setNombre(dto.getNombre());
+        tipo.setDescripcion(dto.getDescripcion());
+        if (dto.getCapacidadMax() != null) {
+            tipo.setCapacidadMax(dto.getCapacidadMax());
+        }
+
+        return toTipoDto(tipoHabitacionRepository.save(tipo));
+    }
+
+    public void eliminarTipo(UUID id) {
+        UUID sucursalId = TenantContext.getSucursalId();
+        TipoHabitacion tipo = tipoHabitacionRepository
+                .findByIdAndSucursalId(id, sucursalId)
+                .orElseThrow(() -> BusinessException.notFound("Tipo no encontrado"));
+
+        // Verificar que no tenga habitaciones activas
+        boolean tieneHabitaciones = habitacionRepository
+                .existsByTipoIdAndIsActiveTrue(tipo.getId());
+
+        if (tieneHabitaciones) {
+            throw BusinessException.badRequest(
+                    "No puedes eliminar un tipo que tiene habitaciones activas");
+        }
+
+        tipoHabitacionRepository.delete(tipo);
     }
 }

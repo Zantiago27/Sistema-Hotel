@@ -27,6 +27,9 @@ public class Habitacion {
     @Column(nullable = false, length = 10)
     private String numero;
 
+    @Column(columnDefinition = "TEXT")
+    private String descripcion;
+
     @Column(length = 10)
     private String piso;
 

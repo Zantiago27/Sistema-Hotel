@@ -3,7 +3,9 @@ package com.hotel.sistemahotel.modules.reserva.service;
 import com.hotel.sistemahotel.modules.cliente.entity.Cliente;
 import com.hotel.sistemahotel.modules.cliente.repository.ClienteRepository;
 import com.hotel.sistemahotel.modules.habitacion.entity.Habitacion;
+import com.hotel.sistemahotel.modules.habitacion.entity.TipoHabitacion;
 import com.hotel.sistemahotel.modules.habitacion.repository.HabitacionRepository;
+import com.hotel.sistemahotel.modules.habitacion.repository.TipoHabitacionRepository;
 import com.hotel.sistemahotel.modules.reserva.dto.*;
 import com.hotel.sistemahotel.modules.reserva.entity.*;
 import com.hotel.sistemahotel.modules.reserva.repository.*;
@@ -28,6 +30,7 @@ public class ReservaService {
     private final HuespedRepository huespedRepository;
     private final HabitacionRepository habitacionRepository;
     private final ClienteRepository clienteRepository;
+    private final TipoHabitacionRepository tipoHabitacionRepository;
 
     @Transactional
     public ReservaResponseDto crear(CrearReservaDto dto) {
@@ -274,6 +277,19 @@ public class ReservaService {
             // Marcar habitación como RESERVADA
             habitacion.setEstado("RESERVADA");
             habitacionRepository.save(habitacion);
+
+            //nuevo metodo para validar capacidad de habitaciones
+            if (dto.getHuespedes() != null) {
+                TipoHabitacion tipo = tipoHabitacionRepository
+                        .findById(habitacion.getTipoId()).orElse(null);
+                int capacidadMax = tipo != null ? tipo.getCapacidadMax() : 2;
+
+                if (dto.getHuespedes().size() > capacidadMax) {
+                    throw BusinessException.badRequest(
+                            "La habitación " + habitacion.getNumero() +
+                                    " tiene capacidad máxima de " + capacidadMax + " personas");
+                }
+            }
 
             // Registrar huéspedes opcionales
             if (dto.getHuespedes() != null && !dto.getHuespedes().isEmpty()) {

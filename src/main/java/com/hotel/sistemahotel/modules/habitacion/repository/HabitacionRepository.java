@@ -18,4 +18,7 @@ public interface HabitacionRepository extends JpaRepository<Habitacion, UUID> {
     Optional<Habitacion> findByIdAndSucursalId(UUID id, UUID sucursalId);
 
     boolean existsByNumeroAndSucursalId(String numero, UUID sucursalId);
+
+    boolean existsByTipoIdAndIsActiveTrue(UUID tipoId); //para tipo de habitacion
+
 }

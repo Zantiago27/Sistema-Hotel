@@ -84,4 +84,22 @@ public class HabitacionController {
         habitacionService.desactivar(id);
         return ResponseEntity.ok(ApiResponse.ok("Habitación desactivada", null));
     }
+
+    //PARA TIPO DE HABITACION
+    @PutMapping("/tipos/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN_EMPRESA', 'GERENTE')")
+    public ResponseEntity<ApiResponse<TipoHabitacionDto>> actualizarTipo(
+            @PathVariable UUID id,
+            @Valid @RequestBody TipoHabitacionDto dto) {
+        return ResponseEntity.ok(ApiResponse.ok(habitacionService.actualizarTipo(id, dto)));
+    }
+
+    @DeleteMapping("/tipos/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN_EMPRESA', 'GERENTE')")
+    public ResponseEntity<ApiResponse<Void>> desactivarTipo(@PathVariable UUID id) {
+        habitacionService.eliminarTipo(id);
+        return ResponseEntity.ok(ApiResponse.ok("Tipo eliminado", null));
+    }
+
+
 }

@@ -16,10 +16,12 @@ public class HabitacionResponseDto {
     private UUID tipoId;
     private String tipoNombre;
     private String numero;
+    private String descripcion;
     private String piso;
     private String estado;
     private BigDecimal precioHora;
     private BigDecimal precioDia;
     private BigDecimal precioNoche;
     private Boolean isActive;
+    private Integer capacidadMax;
 }

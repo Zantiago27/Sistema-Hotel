@@ -14,6 +14,8 @@ public class HabitacionRequestDto {
     @NotBlank(message = "El número de habitación es obligatorio")
     private String numero;
 
+    private String descripcion;
+
     private String piso;
 
     @NotNull(message = "El tipo de habitación es obligatorio")
